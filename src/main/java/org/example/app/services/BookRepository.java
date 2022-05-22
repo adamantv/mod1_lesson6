@@ -20,9 +20,13 @@ public class BookRepository implements ProjectRepository<Book> {
 
     @Override
     public void store(Book book) {
-        book.setId(book.hashCode());
-        logger.info("store new book: " + book);
-        repo.add(book);
+        if (!book.getAuthor().isEmpty() || !book.getTitle().isEmpty() || book.getSize() != null) {
+            book.setId(book.hashCode());
+            logger.info("store new book: " + book);
+            repo.add(book);
+        } else {
+            logger.info("forbidden to store book with empty fields");
+        }
     }
 
     @Override
