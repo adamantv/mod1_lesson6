@@ -27,4 +27,16 @@ public class BookService {
     public boolean removeBookById(Integer bookIdToRemove) {
         return bookRepo.removeItemById(bookIdToRemove);
     }
+
+    public boolean removeBookByAuthor(String author) {
+        return bookRepo.removeItemByAuthor(author);
+    }
+
+    public boolean removeBookByTitle(String title) {
+        return bookRepo.removeItemByTitle(title);
+    }
+
+    public boolean removeBookBySize(Integer size) {
+        return bookRepo.removeItemBySize(size);
+    }
 }
