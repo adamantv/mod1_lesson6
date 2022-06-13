@@ -6,12 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Repository
 public class BookRepository implements ProjectRepository<Book> {
 
     private final Logger logger = Logger.getLogger(BookRepository.class);
     private final List<Book> repo = new ArrayList<>();
+    private final static Pattern PATTERN_FIELD = Pattern.compile("^(size|author|title)/");
+    private final static Pattern PATTERN_SIZE_VALUE = Pattern.compile("^[1-9]\\d*$"); //Ненулевое положительное целое число
 
     @Override
     public List<Book> retreiveAll() {
@@ -85,5 +89,44 @@ public class BookRepository implements ProjectRepository<Book> {
             return true;
         }
         return false;
+    }
+
+    /**
+     * possibility to delete all books by regular expression for the author, title or size field.
+     * correct format for queryRegex query - fieldname/fieldValue
+     * for example: author/Lermontov, size/500, title/Borodino
+     *
+     * @param queryRegex - query with regex from user
+     * @return successful or unsuccessful result
+     */
+    public boolean removeItemByRegex(String queryRegex) {
+        Matcher matcherField = PATTERN_FIELD.matcher(queryRegex);
+        if (matcherField.lookingAt()) {
+            String fieldName = queryRegex.substring(0, queryRegex.lastIndexOf("/"));
+            String fieldValue = matcherField.replaceAll("");
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                logger.warn("No value present for queryRegex " + queryRegex);
+                return false;
+            }
+            switch (fieldName) {
+                case "author":
+                    return removeItemByAuthor(fieldValue);
+                case "title":
+                    return removeItemByTitle(fieldValue);
+                case "size":
+                    if (PATTERN_SIZE_VALUE.matcher(fieldValue).matches()) {
+                        return removeItemBySize(Integer.parseInt(fieldValue));
+                    } else {
+                        logger.error("Size must be positive " + fieldValue);
+                        return false;
+                    }
+                default:
+                    logger.error("Something went wrong for query " + queryRegex);
+                    return false;
+            }
+        } else {
+            logger.error("Unknown fieldName in query " + queryRegex);
+            return false;
+        }
     }
 }

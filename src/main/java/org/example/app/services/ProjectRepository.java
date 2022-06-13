@@ -14,4 +14,6 @@ public interface ProjectRepository<T> {
     boolean removeItemByTitle(String title);
 
     boolean removeItemBySize(Integer size);
+
+    boolean removeItemByRegex(String regex);
 }

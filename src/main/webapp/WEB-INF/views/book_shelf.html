@@ -63,40 +63,17 @@
         </table>
     </form>
 
-    <form method="post" th:action="@{/books/removeByAuthor}">
+    <form method="post" th:action="@{/books/removeByRegex}">
         <table>
             <tr>
                 <td>
-                    <input type="text" placeholder="author" th:name="bookAuthorToRemove">
+                    <div></div>
+                    <input type="text"
+                           title="Чтобы удалить группу книг по автору, названию или размеру, введите запрос в формате: author/, title/ или size/, где после знака / вводится необходимый параметр. Например, author/Пушкин"
+                           placeholder="regex" th:name="queryRegex">
                 </td>
                 <td>
-                    <input type="submit" value="remove by author">
-                </td>
-            </tr>
-        </table>
-    </form>
-
-    <form method="post" th:action="@{/books/removeByTitle}">
-        <table>
-            <tr>
-                <td>
-                    <input type="text" placeholder="title" th:name="bookTitleToRemove">
-                </td>
-                <td>
-                    <input type="submit" value="remove by title">
-                </td>
-            </tr>
-        </table>
-    </form>
-
-    <form method="post" th:action="@{/books/removeBySize}">
-        <table>
-            <tr>
-                <td>
-                    <input type="text" placeholder="size" th:name="bookSizeToRemove">
-                </td>
-                <td>
-                    <input type="submit" value="remove by size">
+                    <input type="submit" value="remove by regex">
                 </td>
             </tr>
         </table>
