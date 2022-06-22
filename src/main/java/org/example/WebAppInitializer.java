@@ -11,7 +11,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import java.util.EnumSet;
 
@@ -19,7 +18,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
     private final Logger logger = Logger.getLogger(WebAppInitializer.class);
 
     @Override
-    public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
+    public void onStartup(javax.servlet.ServletContext servletContext) {
         logger.info("loading app config");
 
         XmlWebApplicationContext applicationContext = new XmlWebApplicationContext();
@@ -27,8 +26,6 @@ public class WebAppInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(applicationContext));
 
         logger.info("loading web config");
-//        XmlWebApplicationContext webApplicationContext = new XmlWebApplicationContext();
-//        webApplicationContext.setConfigLocation("classpath:web-config.xml");
         AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
         webApplicationContext.register(WebContextConfig.class);
 

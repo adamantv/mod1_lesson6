@@ -27,7 +27,7 @@ public class BookRepositoryTest {
         book3.setTitle("Sbornik");
         bookRepository.store(book3);
 
-        assertThat(bookRepository.removeItemById(book1.hashCode())).isTrue();
+        assertThat(bookRepository.removeItemById(String.valueOf(book1.hashCode()))).isTrue();
         assertThat(bookRepository.retreiveAll()).hasSize(2);
     }
 
