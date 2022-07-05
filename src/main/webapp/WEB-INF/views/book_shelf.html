@@ -36,9 +36,11 @@
             <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
+                    <p th:if="${#fields.hasErrors()}">author must be size no more than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
+                    <p th:if="${#fields.hasErrors()}">title must be size no more than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="size (pages)" th:field="*{size}">
