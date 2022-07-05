@@ -2,6 +2,7 @@ package org.example.web.controllers;
 
 import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
+import org.example.exceptions.RegexpSyntaxException;
 import org.example.exceptions.UploadFileException;
 import org.example.web.dto.Book;
 import org.example.web.dto.BookIdToRemove;
@@ -17,7 +18,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/books")
@@ -67,17 +67,23 @@ public class BookShelfController {
     }
 
     @PostMapping("/removeByRegex")
-    public String removeBook(@RequestParam(value = "queryRegex") String queryRegex) {
-        bookService.removeBooksByRegex(queryRegex);
+    public String removeBook(@RequestParam(value = "queryRegex") String queryRegex) throws RegexpSyntaxException {
+        if (queryRegex == null || queryRegex.isEmpty()) {
+            throw new RegexpSyntaxException("Regexp is empty, try again");
+        }
+        boolean isRemoved = bookService.removeBooksByRegex(queryRegex);
+        if (!isRemoved) {
+            throw new RegexpSyntaxException("Incorrect regexp format, try again");
+        }
         return "redirect:/books/shelf";
     }
 
     @PostMapping("/uploadFile")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-        String name = file.getOriginalFilename();
-        if (Objects.equals(name, "")) {
-            throw new UploadFileException("Error during uploading, need to try upload file again");
+    public String uploadFile(@RequestParam("file") MultipartFile file) throws UploadFileException, IOException {
+        if (file == null || file.isEmpty()) {
+            throw new UploadFileException("File is empty, need to try upload file again");
         }
+        String name = file.getOriginalFilename();
         byte[] bytes = file.getBytes();
 
         //create dir
@@ -99,7 +105,13 @@ public class BookShelfController {
     }
 
     @ExceptionHandler(UploadFileException.class)
-    public String handlerUploadFiliException(Model model, UploadFileException exception) {
+    public String handlerUploadFileException(Model model, UploadFileException exception) {
+        model.addAttribute("errorMessage", exception.getMessage());
+        return "errors/500";
+    }
+
+    @ExceptionHandler(RegexpSyntaxException.class)
+    public String handlerRegexpSyntaxException(Model model, RegexpSyntaxException exception) {
         model.addAttribute("errorMessage", exception.getMessage());
         return "errors/500";
     }
