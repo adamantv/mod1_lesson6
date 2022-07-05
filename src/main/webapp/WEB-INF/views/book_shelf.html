@@ -36,15 +36,15 @@
             <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
-                    <p th:if="${#fields.hasErrors()}">author must be size no more than 50 characters</p>
+                    <p th:if="${#fields.hasErrors('author')}">author must be not empty and less than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
-                    <p th:if="${#fields.hasErrors()}">title must be size no more than 50 characters</p>
+                    <p th:if="${#fields.hasErrors('title')}">title must be not empty and less than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="size (pages)" th:field="*{size}">
-                    <p th:if="${#fields.hasErrors()}">field value must be digit and less 4 signs</p>
+                    <p th:if="${#fields.hasErrors('size')}">size must be digit from one and less than 4 signs</p>
                 </td>
                 <td>
                     <input type="submit" value="save">
