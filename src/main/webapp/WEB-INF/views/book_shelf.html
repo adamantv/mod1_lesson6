@@ -36,12 +36,15 @@
             <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
+                    <p th:if="${#fields.hasErrors('author')}">author must be not empty and less than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
+                    <p th:if="${#fields.hasErrors('title')}">title must be not empty and less than 50 characters</p>
                 </td>
                 <td>
                     <input type="text" placeholder="size (pages)" th:field="*{size}">
+                    <p th:if="${#fields.hasErrors('size')}">size must be digit from one and less than 4 signs</p>
                 </td>
                 <td>
                     <input type="submit" value="save">
@@ -50,15 +53,29 @@
         </table>
     </form>
 
-    <form method="post" th:action="@{/books/removeById}">
+    <form method="post" th:action="@{/books/uploadFile}" enctype="multipart/form-data">
         <table>
             <tr>
                 <td>
-                    <input type="text" placeholder="id number" th:name="bookIdToRemove">
+                    <input type="file" name="file"/>
+                </td>
+                <td>
+                    <input type="submit" value="Upload">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <form method="post" th:action="@{/books/removeById}" th:object="${bookIdToRemove}">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" placeholder="remove book" th:field="*{id}">
                 </td>
                 <td>
                     <input type="submit" value="remove by id">
                 </td>
+                <td th:if="${#fields.hasErrors()}"><p>Wrong id or not found</p></td>
             </tr>
         </table>
     </form>
